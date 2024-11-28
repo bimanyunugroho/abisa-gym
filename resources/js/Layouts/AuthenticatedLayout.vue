@@ -60,6 +60,13 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Induksi Anggota
                                 </NavLink>
+                                <NavLink
+                                    :href="route('admin.member-levels.index')"
+                                    :active="route().current('admin.member-levels.index')"
+                                    class="dark:hover:text-dark-hover"
+                                >
+                                    Level Anggota
+                                </NavLink>
                             </div>
                         </div>
 
