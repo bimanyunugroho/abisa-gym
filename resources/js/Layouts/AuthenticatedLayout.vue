@@ -53,6 +53,13 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Master Alat
                                 </NavLink>
+                                <NavLink
+                                    :href="route('admin.member-inductions.index')"
+                                    :active="route().current('admin.member-inductions.index')"
+                                    class="dark:hover:text-dark-hover"
+                                >
+                                    Induksi Anggota
+                                </NavLink>
                             </div>
                         </div>
 

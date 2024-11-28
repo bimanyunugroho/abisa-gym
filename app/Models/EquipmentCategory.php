@@ -56,4 +56,9 @@ class EquipmentCategory extends Model
     {
         return $this->hasMany(Equipment::class, 'category_id');
     }
+
+    public function memberInductions()
+    {
+        return $this->hasMany(MemberInduction::class);
+    }
 }

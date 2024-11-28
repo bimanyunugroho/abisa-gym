@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Enums\RoleEnum;
 
 class LoginRequest extends FormRequest
 {
@@ -46,6 +47,14 @@ class LoginRequest extends FormRequest
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
+            ]);
+        }
+
+        if (Auth::user()->role !== RoleEnum::SUPER_ADMIN->value) {
+            Auth::logout();
+            
+            throw ValidationException::withMessages([
+                'email' => 'Only Super Admin can login.',
             ]);
         }
 
