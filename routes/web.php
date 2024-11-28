@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\Master\EquipmentCategoryController;
+use App\Http\Controllers\Admin\Master\EquipmentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +24,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::group([
+        'prefix' => 'admin',
+        'as' => 'admin.',
+    ], function () {
+        Route::resource('equipment-categories', EquipmentCategoryController::class);
+        Route::resource('equipments', EquipmentController::class);
+    });
+
 });
 
 require __DIR__.'/auth.php';
