@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Equipment;
 use App\Models\EquipmentCategory;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -14,6 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        EquipmentCategory::factory(100)->create();
+        EquipmentCategory::factory(5)->create();
+        Equipment::factory(50)->create();
     }
 }

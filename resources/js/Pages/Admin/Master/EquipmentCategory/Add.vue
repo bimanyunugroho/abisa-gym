@@ -9,7 +9,7 @@ import TextInputUppercase from '@/Components/Inputs/TextInputUppercase.vue';
 import SubmitButton from '@/Components/Buttons/SubmitButton.vue';
 import ActionLink from '@/Components/Buttons/ActionLink.vue';
 import Breadcrumb from '@/Components/Helpers/Breadcrumb.vue';
-
+import LabelRequired from '@/Components/Helpers/LabelRequired.vue';
 const { props } = usePage();
 const { title, desc, difficultyLevels, errors: pageErrors } = props;
 const toast = useToast();
@@ -64,9 +64,11 @@ const breadcrumbItems = [
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <form @submit.prevent="handleSubmit">
                             <div class="mb-4">
-                                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Nama Kategori
-                                </label>
+                                <LabelRequired 
+                                    text="Nama Kategori" 
+                                    html-for="name"
+                                    :required="true" 
+                                />
                                 <TextInputUppercase 
                                     id="name" 
                                     v-model="form.name" 
@@ -82,9 +84,11 @@ const breadcrumbItems = [
                             </div>
 
                             <div class="mb-4">
-                                <label for="difficulty_level" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Tingkat Kesulitan
-                                </label>
+                                <LabelRequired 
+                                    text="Tingkat Kesulitan" 
+                                    html-for="difficulty_level"
+                                    :required="true" 
+                                />
                                 <CustomSelect
                                     v-model="form.difficulty_level"
                                     :options="difficultyLevels"
@@ -104,9 +108,12 @@ const breadcrumbItems = [
                                         v-model="form.needs_supervision"
                                         class="rounded border-gray-300 text-orange-600 shadow-sm focus:ring-orange-500"
                                     >
-                                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">
-                                        Membutuhkan Pengawasan
-                                    </span>
+                                    <LabelRequired 
+                                        text="Membutuhkan Pengawasan" 
+                                        html-for="needs_supervision"
+                                        :required="true" 
+                                        class="ml-2"
+                                    />
                                 </label>
                                 <p v-if="form.errors.needs_supervision" class="mt-2 text-sm text-red-600 dark:text-red-400">
                                     {{ form.errors.needs_supervision }}

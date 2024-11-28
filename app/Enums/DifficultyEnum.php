@@ -4,10 +4,10 @@ namespace App\Enums;
 
 enum DifficultyEnum: string
 {
-    case PEMULA = 'pemula';
-    case MENENGAH = 'menengah';
-    case LANJUTAN = 'lanjutan';
-    case AHLI = 'ahli';
+    case PEMULA = 'PEMULA';
+    case MENENGAH = 'MENENGAH';
+    case LANJUTAN = 'LANJUTAN';
+    case AHLI = 'AHLI';
 
     public static function values(): array
     {

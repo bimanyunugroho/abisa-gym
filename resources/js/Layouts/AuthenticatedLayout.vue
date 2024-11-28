@@ -46,6 +46,13 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Master Kategori Alat
                                 </NavLink>
+                                <NavLink
+                                    :href="route('admin.equipments.index')"
+                                    :active="route().current('admin.equipments.index')"
+                                    class="dark:hover:text-dark-hover"
+                                >
+                                    Master Alat
+                                </NavLink>
                             </div>
                         </div>
 

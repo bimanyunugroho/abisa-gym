@@ -5,20 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
 
-class EquipmentCategory extends Model
+class Equipment extends Model
 {
+    /** @use HasFactory<\Database\Factories\EquipmentFactory> */
     use HasFactory, SoftDeletes, HasSlug, LogsActivity;
 
+    protected $table = 'equipments';
+    
     protected $fillable = [
+        'category_id',
         'name',
         'slug',
-        'difficulty_level',
-        'needs_supervision',
+        'description',
+        'usage_instructions',
+        'brand',
+        'model',
+        'purchase_date',
+        'last_maintenance_date',
+        'condition',
+        'is_active',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -26,7 +36,7 @@ class EquipmentCategory extends Model
         return LogOptions::defaults()
             ->logAll()
             ->logOnlyDirty()
-            ->useLogName('Master Kategori Alat')
+            ->useLogName('Master Alat')
             ->setDescriptionForEvent(function(string $eventName) {
                 return "{$eventName}: {$this->name}";
             });
@@ -35,7 +45,7 @@ class EquipmentCategory extends Model
     public function getSlugOptions() : SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom(['name', 'difficulty_level'])
+            ->generateSlugsFrom(['name', 'brand', 'model', 'category_id'])
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }
@@ -48,12 +58,14 @@ class EquipmentCategory extends Model
     protected function casts(): array
     {
         return [
-            'needs_supervision' => 'boolean',
+            'purchase_date' => 'date',
+            'last_maintenance_date' => 'date',
+            'is_active' => 'boolean',
         ];
     }
 
-    public function equipment()
+    public function category()
     {
-        return $this->hasMany(Equipment::class, 'category_id');
+        return $this->belongsTo(EquipmentCategory::class, 'category_id');
     }
 }
