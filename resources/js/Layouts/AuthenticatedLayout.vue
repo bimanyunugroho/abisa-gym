@@ -67,6 +67,13 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Level Anggota
                                 </NavLink>
+                                <NavLink
+                                    :href="route('admin.membership-plans.index')"
+                                    :active="route().current('admin.membership-plans.index')"
+                                    class="dark:hover:text-dark-hover"
+                                >
+                                    Plan Anggota
+                                </NavLink>
                             </div>
                         </div>
 

@@ -10,30 +10,34 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class MemberLevel extends Model
+class MembershipPlan extends Model
 {
-    /** @use HasFactory<\Database\Factories\MemberInductionFactory> */
+    /** @use HasFactory<\Database\Factories\MembershipPlanFactory> */
     use HasFactory, SoftDeletes, HasSlug, LogsActivity;
 
     protected $fillable = [
         'name',
         'slug',
+        'member_level_id',
         'description',
-        'can_train_without_trainer',
-        'needs_orientation',
-        'has_trainer_access',
-        'max_guests',
-        'guest_fee',
+        'price',
+        'duration_days',
+        'duration_type',
+        'visit_limit',
+        'access_all_branches',
+        'available_times',
+        'is_active',
     ];
 
     protected function casts(): array
     {
         return [
-            'can_train_without_trainer' => 'boolean',
-            'needs_orientation' => 'boolean',
-            'has_trainer_access' => 'boolean',
-            'max_guests' => 'integer',
-            'guest_fee' => 'decimal:2',
+            'price' => 'decimal:2',
+            'duration_days' => 'integer',
+            'visit_limit' => 'integer',
+            'access_all_branches' => 'boolean',
+            'available_times' => 'json',
+            'is_active' => 'boolean',
         ];
     }
 
@@ -42,7 +46,7 @@ class MemberLevel extends Model
         return LogOptions::defaults()
             ->logAll()
             ->logOnlyDirty()
-            ->useLogName('Level Anggota')
+            ->useLogName('Paket Anggota')
             ->setDescriptionForEvent(function(string $eventName) {
                 return "{$eventName}: {$this->name}";
             });
@@ -61,8 +65,8 @@ class MemberLevel extends Model
         return 'slug';
     }
 
-    public function membershipPlans()
+    public function memberLevel()
     {
-        return $this->hasMany(MembershipPlan::class);
+        return $this->belongsTo(MemberLevel::class);
     }
 }
