@@ -2,6 +2,10 @@
 
 use App\Http\Controllers\Admin\Master\EquipmentCategoryController;
 use App\Http\Controllers\Admin\Master\EquipmentController;
+use App\Http\Controllers\Admin\Member\MemberInductionController;
+use App\Http\Controllers\Admin\Member\MemberLevelController;
+use App\Http\Controllers\Admin\Member\MemberRegistrationController;
+use App\Http\Controllers\Admin\Member\MembershipPlanController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +35,10 @@ Route::middleware('auth')->group(function () {
     ], function () {
         Route::resource('equipment-categories', EquipmentCategoryController::class);
         Route::resource('equipments', EquipmentController::class);
+        Route::resource('member-inductions', MemberInductionController::class);
+        Route::resource('member-levels', MemberLevelController::class);
+        Route::resource('membership-plans', MembershipPlanController::class);
+        Route::resource('member-registrations', MemberRegistrationController::class);
     });
 
 });

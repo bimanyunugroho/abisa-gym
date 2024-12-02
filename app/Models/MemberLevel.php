@@ -5,28 +5,44 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
 
-class EquipmentCategory extends Model
+class MemberLevel extends Model
 {
+    /** @use HasFactory<\Database\Factories\MemberInductionFactory> */
     use HasFactory, SoftDeletes, HasSlug, LogsActivity;
 
     protected $fillable = [
         'name',
         'slug',
-        'difficulty_level',
-        'needs_supervision',
+        'description',
+        'can_train_without_trainer',
+        'needs_orientation',
+        'has_trainer_access',
+        'max_guests',
+        'guest_fee',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'can_train_without_trainer' => 'boolean',
+            'needs_orientation' => 'boolean',
+            'has_trainer_access' => 'boolean',
+            'max_guests' => 'integer',
+            'guest_fee' => 'decimal:2',
+        ];
+    }
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->logAll()
             ->logOnlyDirty()
-            ->useLogName('Master Kategori Alat')
+            ->useLogName('Level Anggota')
             ->setDescriptionForEvent(function(string $eventName) {
                 return "{$eventName}: {$this->name}";
             });
@@ -35,7 +51,7 @@ class EquipmentCategory extends Model
     public function getSlugOptions() : SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom(['name', 'difficulty_level'])
+            ->generateSlugsFrom(['name'])
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }
@@ -45,20 +61,8 @@ class EquipmentCategory extends Model
         return 'slug';
     }
 
-    protected function casts(): array
+    public function membershipPlans()
     {
-        return [
-            'needs_supervision' => 'boolean',
-        ];
-    }
-
-    public function equipment()
-    {
-        return $this->hasMany(Equipment::class, 'category_id');
-    }
-
-    public function memberInductions()
-    {
-        return $this->hasMany(MemberInduction::class);
+        return $this->hasMany(MembershipPlan::class);
     }
 }

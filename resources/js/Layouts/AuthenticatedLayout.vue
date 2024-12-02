@@ -53,6 +53,34 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Master Alat
                                 </NavLink>
+                                <NavLink
+                                    :href="route('admin.member-inductions.index')"
+                                    :active="route().current('admin.member-inductions.index')"
+                                    class="dark:hover:text-dark-hover"
+                                >
+                                    Induksi Anggota
+                                </NavLink>
+                                <NavLink
+                                    :href="route('admin.member-levels.index')"
+                                    :active="route().current('admin.member-levels.index')"
+                                    class="dark:hover:text-dark-hover"
+                                >
+                                    Level Anggota
+                                </NavLink>
+                                <NavLink
+                                    :href="route('admin.membership-plans.index')"
+                                    :active="route().current('admin.membership-plans.index')"
+                                    class="dark:hover:text-dark-hover"
+                                >
+                                    Plan Anggota
+                                </NavLink>
+                                <NavLink
+                                    :href="route('admin.member-registrations.index')"
+                                    :active="route().current('admin.member-registrations.index')"
+                                    class="dark:hover:text-dark-hover"
+                                >
+                                    Registrasi Anggota
+                                </NavLink>
                             </div>
                         </div>
 
