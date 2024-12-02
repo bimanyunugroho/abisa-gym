@@ -93,4 +93,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(MemberInduction::class, 'trainer_id');
     }
+
+    public function memberRegistrations()
+    {
+        return $this->hasMany(MemberRegistration::class);
+    }
 }

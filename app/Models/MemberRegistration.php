@@ -10,34 +10,30 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class MembershipPlan extends Model
+class MemberRegistration extends Model
 {
-    /** @use HasFactory<\Database\Factories\MembershipPlanFactory> */
+    /** @use HasFactory<\Database\Factories\MemberRegistrationFactory> */
     use HasFactory, SoftDeletes, HasSlug, LogsActivity;
 
     protected $fillable = [
-        'name',
-        'slug',
-        'member_level_id',
-        'description',
-        'price',
-        'duration_days',
-        'duration_type',
-        'visit_limit',
-        'access_all_branches',
-        'available_times',
-        'is_active',
+        'user_id',
+        'membership_plan_id',
+        'start_date',
+        'end_date',
+        'visits_left',
+        'status',
+        'orientation_date',
+        'orientation_completed',
     ];
 
     protected function casts(): array
     {
         return [
-            'price' => 'decimal:2',
-            'duration_days' => 'integer',
-            'visit_limit' => 'integer',
-            'access_all_branches' => 'boolean',
-            'available_times' => 'json',
-            'is_active' => 'boolean',
+            'start_date' => 'date',
+            'end_date' => 'date',
+            'orientation_date' => 'date',
+            'orientation_completed' => 'boolean',
+            'visits_left' => 'integer',
         ];
     }
 
@@ -46,16 +42,16 @@ class MembershipPlan extends Model
         return LogOptions::defaults()
             ->logAll()
             ->logOnlyDirty()
-            ->useLogName('Paket Anggota')
+            ->useLogName('Registrasi Anggota')
             ->setDescriptionForEvent(function(string $eventName) {
-                return "{$eventName}: {$this->name}";
+                return "{$eventName}: {$this->user_id} - {$this->membership_plan_id} - {$this->status}";
             });
     }
 
     public function getSlugOptions() : SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom(['name'])
+            ->generateSlugsFrom(['user_id', 'membership_plan_id', 'status'])
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }
@@ -65,13 +61,13 @@ class MembershipPlan extends Model
         return 'slug';
     }
 
-    public function memberLevel()
+    public function user()
     {
-        return $this->belongsTo(MemberLevel::class);
+        return $this->belongsTo(User::class);
     }
-    
-    public function memberRegistrations()
+
+    public function membershipPlan()
     {
-        return $this->hasMany(MemberRegistration::class);
+        return $this->belongsTo(MembershipPlan::class);
     }
 }

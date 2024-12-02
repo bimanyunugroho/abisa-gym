@@ -6,6 +6,7 @@ use App\Models\Equipment;
 use App\Models\EquipmentCategory;
 use App\Models\MemberInduction;
 use App\Models\MemberLevel;
+use App\Models\MemberRegistration;
 use App\Models\MembershipPlan;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -24,5 +25,6 @@ class DatabaseSeeder extends Seeder
         MemberInduction::factory(10)->create();
         MemberLevel::factory(10)->create();
         MembershipPlan::factory(10)->create();
+        MemberRegistration::factory(10)->create();
     }
 }

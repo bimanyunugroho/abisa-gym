@@ -12,6 +12,22 @@ use Illuminate\Support\Str;
  */
 class MembershipPlanFactory extends Factory
 {
+    protected $timeSlots = [
+        // Pagi
+        ['start' => '06:00', 'end' => '08:00'],
+        ['start' => '08:00', 'end' => '10:00'],
+        ['start' => '10:00', 'end' => '12:00'],
+        // Siang
+        ['start' => '12:00', 'end' => '14:00'],
+        ['start' => '14:00', 'end' => '16:00'],
+        // Sore
+        ['start' => '16:00', 'end' => '18:00'],
+        ['start' => '18:00', 'end' => '20:00'],
+        // Malam
+        ['start' => '19:00', 'end' => '21:00'],
+        ['start' => '20:00', 'end' => '22:00']
+    ];
+
     /**
      * Define the model's default state.
      *
@@ -19,23 +35,11 @@ class MembershipPlanFactory extends Factory
      */
     public function definition(): array
     {
-        $timeRanges = [];
-        $numRanges = fake()->numberBetween(2, 4);
-        
-        for ($i = 0; $i < $numRanges; $i++) {
-            $startHour = fake()->numberBetween(6, 20);
-            $startMinute = fake()->randomElement(['00', '30']);
-            $start = sprintf("%02d:%s", $startHour, $startMinute);
-            
-            $endHour = min($startHour + fake()->numberBetween(1, 3), 23);
-            $endMinute = fake()->randomElement(['00', '30']);
-            $end = sprintf("%02d:%s", $endHour, $endMinute);
-            
-            $timeRanges[] = [
-                'start' => $start,
-                'end' => $end
-            ];
-        }
+        // Ambil 2-4 time slots secara random
+        $selectedTimeSlots = collect($this->timeSlots)
+            ->random(fake()->numberBetween(2, 4))
+            ->values()
+            ->toArray();
 
         return [
             'name' => strtoupper(fake()->words(3, true)),
@@ -47,7 +51,7 @@ class MembershipPlanFactory extends Factory
             'duration_type' => fake()->randomElement(DurationTypeEnum::values()),
             'visit_limit' => fake()->numberBetween(10, 100),
             'access_all_branches' => fake()->boolean(),
-            'available_times' => $timeRanges,
+            'available_times' => $selectedTimeSlots,
             'is_active' => fake()->boolean(),
         ];
     }

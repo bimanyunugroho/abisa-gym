@@ -74,6 +74,13 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Plan Anggota
                                 </NavLink>
+                                <NavLink
+                                    :href="route('admin.member-registrations.index')"
+                                    :active="route().current('admin.member-registrations.index')"
+                                    class="dark:hover:text-dark-hover"
+                                >
+                                    Registrasi Anggota
+                                </NavLink>
                             </div>
                         </div>
 
