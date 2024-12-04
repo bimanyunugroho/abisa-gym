@@ -1,5 +1,8 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
+
+const appName = usePage().props.app.name;
 
 defineProps({
     canLogin: {
@@ -54,7 +57,7 @@ defineProps({
 
                 <main class="mt-6">
                     <div class="text-center">
-                        <h1 class="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl">Abisa Gym</h1>
+                        <h1 class="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl">{{ appName }}</h1>
                         <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">Efficient gym management</p>
                     </div>
 

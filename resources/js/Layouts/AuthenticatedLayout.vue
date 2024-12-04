@@ -8,143 +8,213 @@ import ResponsiveNavLink from '@/Components/Helpers/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+
+const masterMenus = [
+    { name: 'Master Alat', route: 'admin.equipments.index' },
+    { name: 'Master Kategori Alat', route: 'admin.equipment-categories.index' },
+];
+
+const settingMenus = [
+    { name: 'Anggota Level', route: 'admin.member-levels.index' },
+    { name: 'Anggota Plan', route: 'admin.membership-plans.index' }
+]
+
+const memberMenus = [
+    { name: 'Orientasi Anggota', route: 'admin.member-inductions.index' },
+    { name: 'Registrasi Anggota', route: 'admin.member-registrations.index' },
+];
 </script>
 
 <template>
     <div>
-        <div class="min-h-screen bg-gray-100 dark:bg-dark-background dark:text-dark-text">
-            <nav
-                class="border-b border-gray-100 bg-white dark:bg-dark-secondary dark:border-dark-background">
+        <div class="min-h-screen bg-gray-100 dark:bg-dark-background">
+            <nav class="bg-white dark:bg-dark-default border-b border-gray-100 dark:border-dark-background">
                 <!-- Primary Navigation Menu -->
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div class="flex h-16 justify-between">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between h-16">
                         <div class="flex">
                             <!-- Logo -->
-                            <div class="flex shrink-0 items-center">
-                                <Link :href="route('dashboard')">
-                                    <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-dark-accent dark:text-dark-text"
-                                    />
+                            <div class="shrink-0 flex items-center">
+                                <Link :href="route('home')">
+                                    <ApplicationLogo class="block h-9 w-auto fill-current text-dark-accent dark:text-dark-accent" />
                                 </Link>
                             </div>
 
                             <!-- Navigation Links -->
-                            <div
-                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
-                            >
-                                <NavLink
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
-                                    class="dark:hover:text-dark-hover"
-                                >
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-                                <NavLink
-                                    :href="route('admin.equipment-categories.index')"
-                                    :active="route().current('admin.equipment-categories.index')"
-                                    class="dark:hover:text-dark-hover"
-                                >
-                                    Master Kategori Alat
-                                </NavLink>
-                                <NavLink
-                                    :href="route('admin.equipments.index')"
-                                    :active="route().current('admin.equipments.index')"
-                                    class="dark:hover:text-dark-hover"
-                                >
-                                    Master Alat
-                                </NavLink>
-                                <NavLink
-                                    :href="route('admin.member-inductions.index')"
-                                    :active="route().current('admin.member-inductions.index')"
-                                    class="dark:hover:text-dark-hover"
-                                >
-                                    Induksi Anggota
-                                </NavLink>
-                                <NavLink
-                                    :href="route('admin.member-levels.index')"
-                                    :active="route().current('admin.member-levels.index')"
-                                    class="dark:hover:text-dark-hover"
-                                >
-                                    Level Anggota
-                                </NavLink>
-                                <NavLink
-                                    :href="route('admin.membership-plans.index')"
-                                    :active="route().current('admin.membership-plans.index')"
-                                    class="dark:hover:text-dark-hover"
-                                >
-                                    Plan Anggota
-                                </NavLink>
-                                <NavLink
-                                    :href="route('admin.member-registrations.index')"
-                                    :active="route().current('admin.member-registrations.index')"
-                                    class="dark:hover:text-dark-hover"
-                                >
-                                    Registrasi Anggota
-                                </NavLink>
+
+                                <!-- Master Dropdown -->
+                                <div class="relative group space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <button 
+                                        class="inline-flex items-center px-1 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none group"
+                                        :class="[
+                                            route().current('admin.equipments.*', 'admin.equipment-categories.*') 
+                                                ? 'text-gray-900 dark:text-white border-b-2 border-dark-accent' 
+                                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                                        ]"
+                                    >
+                                        Master
+                                        <div class="ml-2 p-1 rounded-full bg-dark-accent bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-200">
+                                            <svg 
+                                                class="h-4 w-4 text-dark-accent transition-transform duration-200 group-hover:rotate-180" 
+                                                xmlns="http://www.w3.org/2000/svg" 
+                                                viewBox="0 0 20 20" 
+                                                fill="currentColor"
+                                            >
+                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </button>
+
+                                    <div class="absolute z-50 hidden group-hover:block mt-14 w-48">
+                                        <div class="py-1 bg-white dark:bg-dark-secondary rounded-md shadow-lg ring-1 ring-black ring-opacity-5 transform opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200">
+                                            <Link 
+                                                v-for="menu in masterMenus" 
+                                                :key="menu.route"
+                                                :href="route(menu.route)"
+                                                class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-primary-500 hover:text-white dark:hover:bg-dark-accent focus:outline-none transition duration-150 ease-in-out"
+                                                :class="{ 'bg-primary-500 text-white dark:bg-dark-accent': route().current(menu.route) }"
+                                            >
+                                                {{ menu.name }}
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="relative group space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <button 
+                                        class="inline-flex items-center px-1 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none group"
+                                        :class="[
+                                            route().current('admin.member-levels.*', 'admin.membership-plans.*') 
+                                                ? 'text-gray-900 dark:text-white border-b-2 border-dark-accent' 
+                                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                                        ]"
+                                    >
+                                        Setting
+                                        <div class="ml-2 p-1 rounded-full bg-dark-accent bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-200">
+                                            <svg 
+                                                class="h-4 w-4 text-dark-accent transition-transform duration-200 group-hover:rotate-180" 
+                                                xmlns="http://www.w3.org/2000/svg" 
+                                                viewBox="0 0 20 20" 
+                                                fill="currentColor"
+                                            >
+                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </button>
+
+                                    <div class="absolute z-50 hidden group-hover:block mt-14 w-48">
+                                        <div class="py-1 bg-white dark:bg-dark-secondary rounded-md shadow-lg ring-1 ring-black ring-opacity-5 transform opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200">
+                                            <Link 
+                                                v-for="menu in settingMenus" 
+                                                :key="menu.route"
+                                                :href="route(menu.route)"
+                                                class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-primary-500 hover:text-white dark:hover:bg-dark-accent focus:outline-none transition duration-150 ease-in-out"
+                                                :class="{ 'bg-primary-500 text-white dark:bg-dark-accent': route().current(menu.route) }"
+                                            >
+                                                {{ menu.name }}
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Member Dropdown -->
+                                <div class="relative group space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <button 
+                                        class="inline-flex items-center px-1 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none group"
+                                        :class="[
+                                            route().current('admin.member-*') 
+                                                ? 'text-gray-900 dark:text-white border-b-2 border-dark-accent' 
+                                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                                        ]"
+                                    >
+                                        Member
+                                        <div class="ml-2 p-1 rounded-full bg-dark-accent bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-200">
+                                            <svg 
+                                                class="h-4 w-4 text-dark-accent transition-transform duration-200 group-hover:rotate-180" 
+                                                xmlns="http://www.w3.org/2000/svg" 
+                                                viewBox="0 0 20 20" 
+                                                fill="currentColor"
+                                            >
+                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </button>
+
+                                    <div class="absolute z-50 hidden group-hover:block mt-14 w-56">
+                                        <div class="py-1 bg-white dark:bg-dark-secondary rounded-md shadow-lg ring-1 ring-black ring-opacity-5 transform opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200">
+                                            <Link 
+                                                v-for="menu in memberMenus" 
+                                                :key="menu.route"
+                                                :href="route(menu.route)"
+                                                class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-primary-500 hover:text-white dark:hover:bg-dark-accent focus:outline-none transition duration-150 ease-in-out"
+                                                :class="{ 'bg-primary-500 text-white dark:bg-dark-accent': route().current(menu.route) }"
+                                            >
+                                                {{ menu.name }}
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="hidden sm:ms-6 sm:flex sm:items-center">
-                            <!-- Settings Dropdown -->
-                            <div class="relative ms-3">
-                                <Dropdown align="right" width="48">
-                                    <template #trigger>
-                                        <span class="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                class="inline-flex items-center rounded-md border border-transparent px-3 py-2 text-sm font-medium leading-4 
-                                                    text-gray-500 transition duration-150 ease-in-out 
-                                                    dark:bg-dark-secondary dark:text-dark-text 
-                                                    dark:hover:bg-dark-accent dark:hover:text-white"
+                        <!-- Settings Dropdown -->
+                        <div class="hidden sm:flex sm:items-center sm:ml-6">
+                            <Dropdown align="right" width="48">
+                                <template #trigger>
+                                    <span class="inline-flex rounded-md">
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center rounded-md border border-transparent px-3 py-2 text-sm font-medium leading-4 
+                                                text-gray-500 transition duration-150 ease-in-out 
+                                                dark:bg-dark-secondary dark:text-dark-text 
+                                                dark:hover:bg-dark-accent dark:hover:text-white"
+                                        >
+                                            {{ $page.props.auth.user.name }}
+
+                                            <svg
+                                                class="-me-0.5 ms-2 h-4 w-4"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
                                             >
-                                                {{ $page.props.auth.user.name }}
+                                                <path
+                                                    fill-rule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                    clip-rule="evenodd"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </span>
+                                </template>
 
-                                                <svg
-                                                    class="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fill-rule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </template>
-
-                                    <template #content>
-                                        <DropdownLink
-                                            :href="route('profile.edit')"
-                                            class="dark:hover:bg-dark-accent"
-                                        >
-                                            Profile
-                                        </DropdownLink>
-                                        <DropdownLink
-                                            :href="route('logout')"
-                                            method="post"
-                                            as="button"
-                                            class="dark:hover:bg-dark-accent"
-                                        >
-                                            Log Out
-                                        </DropdownLink>
-                                    </template>
-                                </Dropdown>
-                            </div>
+                                <template #content>
+                                    <DropdownLink
+                                        :href="route('profile.edit')"
+                                        class="dark:hover:bg-dark-accent"
+                                    >
+                                        Profile
+                                    </DropdownLink>
+                                    <DropdownLink
+                                        :href="route('logout')"
+                                        method="post"
+                                        as="button"
+                                        class="dark:hover:bg-dark-accent"
+                                    >
+                                        Log Out
+                                    </DropdownLink>
+                                </template>
+                            </Dropdown>
                         </div>
 
                         <!-- Hamburger -->
-                        <div class="-me-2 flex items-center sm:hidden">
+                        <div class="-mr-2 flex items-center sm:hidden">
                             <button
                                 @click="showingNavigationDropdown = !showingNavigationDropdown"
-                                class="inline-flex items-center justify-center rounded-md p-2 
-                                    text-gray-400 transition duration-150 ease-in-out 
-                                    hover:bg-gray-100 hover:text-gray-500 
-                                    focus:bg-gray-100 focus:text-gray-500 focus:outline-none 
-                                    dark:text-dark-muted 
-                                    dark:hover:bg-dark-secondary dark:hover:text-dark-text"
+                                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out"
                             >
                                 <svg
                                     class="h-6 w-6"
@@ -179,13 +249,7 @@ const showingNavigationDropdown = ref(false);
                 </div>
 
                 <!-- Responsive Navigation Menu -->
-                <div
-                    :class="{
-                        block: showingNavigationDropdown,
-                        hidden: !showingNavigationDropdown,
-                    }"
-                    class="sm:hidden"
-                >
+                <div :class="{'block': showingNavigationDropdown, 'hidden': !showingNavigationDropdown}" class="sm:hidden">
                     <div class="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
                             :href="route('dashboard')"
@@ -230,6 +294,7 @@ const showingNavigationDropdown = ref(false);
                     </div>
                 </div>
             </nav>
+
             <!-- Page Content -->
             <main>
                 <slot />
