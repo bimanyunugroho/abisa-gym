@@ -20,6 +20,7 @@ const settingMenus = [
 ]
 
 const memberMenus = [
+    { name: 'Anggota', route: 'admin.members.index' },
     { name: 'Orientasi Anggota', route: 'admin.member-inductions.index' },
     { name: 'Registrasi Anggota', route: 'admin.member-registrations.index' },
 ];
@@ -126,7 +127,7 @@ const memberMenus = [
                                     <button 
                                         class="inline-flex items-center px-1 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none group"
                                         :class="[
-                                            route().current('admin.member-*') 
+                                            route().current('admin.member-inductions.*', 'admin.member-registrations.*') 
                                                 ? 'text-gray-900 dark:text-white border-b-2 border-dark-accent' 
                                                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                                         ]"

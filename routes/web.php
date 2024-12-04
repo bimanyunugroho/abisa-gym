@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Master\EquipmentCategoryController;
 use App\Http\Controllers\Admin\Master\EquipmentController;
+use App\Http\Controllers\Admin\Member\MemberController;
 use App\Http\Controllers\Admin\Member\MemberInductionController;
 use App\Http\Controllers\Admin\Member\MemberLevelController;
 use App\Http\Controllers\Admin\Member\MemberRegistrationController;
@@ -39,6 +40,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('member-levels', MemberLevelController::class);
         Route::resource('membership-plans', MembershipPlanController::class);
         Route::resource('member-registrations', MemberRegistrationController::class);
+        Route::resource('members', MemberController::class);
     });
 
 });

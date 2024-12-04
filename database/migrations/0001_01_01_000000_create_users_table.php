@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug');
+            $table->string('gym_number');
             $table->string('email')->unique();
             $table->enum('role', RoleEnum::values())->default(RoleEnum::MEMBER->value);
             $table->string('phone_number')->nullable();

@@ -11,6 +11,8 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use App\Enums\RoleEnum;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -25,6 +27,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'slug',
+        'gym_number',
         'email',
         'password',
         'role',
@@ -97,5 +100,42 @@ class User extends Authenticatable
     public function memberRegistrations()
     {
         return $this->hasMany(MemberRegistration::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            if (!$user->role) {
+                $user->role = RoleEnum::MEMBER->value;
+            }
+
+            if (in_array($user->role, [RoleEnum::ADMIN->value, RoleEnum::TRAINER->value, RoleEnum::MEMBER->value])) {
+                $user->gym_number = static::generateGymNumber($user->role);
+            }
+        });
+    }
+
+    protected static function generateGymNumber($role): string
+    {
+        $prefix = match ($role) {
+            RoleEnum::ADMIN->value => 'ADM',
+            RoleEnum::TRAINER->value => 'TRN',
+            RoleEnum::MEMBER->value => 'MBR',
+            default => throw new \InvalidArgumentException('Invalid role for gym number generation')
+        };
+
+        $date = Carbon::now()->format('Ymd');
+        
+        $lastNumber = static::where('gym_number', 'like', "{$prefix}-{$date}-%")
+            ->orderBy('gym_number', 'desc')
+            ->first();
+
+        $sequence = $lastNumber ? 
+            (int) substr($lastNumber->gym_number, -4) + 1 : 
+            1;
+
+        return sprintf("%s-%s-%04d", $prefix, $date, $sequence);
     }
 }
