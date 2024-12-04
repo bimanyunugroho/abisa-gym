@@ -56,7 +56,7 @@ const formattedPhoneNumber = computed(() => {
                @input="formatPhoneNumber" 
                @keydown="onlyAllowNumbers" 
                type="text" 
-               class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-full"
+               class="border-gray-300 dark:border-gray-700 dark:bg-dark-background dark:text-gray-300 focus:border-dark-muted dark:focus:border-dark-muted focus:ring-dark-border dark:focus:ring-dark-border rounded-md shadow-sm w-full"
                :maxlength="14" />
         <p v-if="errorMessage" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errorMessage }}</p>
     </div>

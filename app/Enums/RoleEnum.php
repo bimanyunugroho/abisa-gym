@@ -25,4 +25,15 @@ enum RoleEnum: string
             self::MEMBER => 'Member',
         };
     }
+
+    public static function forMemberForm(): array
+    {
+        return collect([self::MEMBER, self::TRAINER])
+            ->map(fn ($role) => [
+                'label' => $role->label(),
+                'value' => $role->value
+            ])
+            ->values()
+            ->toArray();
+    }
 }
