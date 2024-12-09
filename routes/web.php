@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Gym\GymVisitController;
 use App\Http\Controllers\Admin\Master\EquipmentCategoryController;
 use App\Http\Controllers\Admin\Master\EquipmentController;
 use App\Http\Controllers\Admin\Member\MemberController;
@@ -41,6 +42,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('membership-plans', MembershipPlanController::class);
         Route::resource('member-registrations', MemberRegistrationController::class);
         Route::resource('members', MemberController::class);
+        Route::resource('gym-visits', GymVisitController::class);
     });
 
 });

@@ -10,8 +10,8 @@ import { Link } from '@inertiajs/vue3';
 const showingNavigationDropdown = ref(false);
 
 const masterMenus = [
-    { name: 'Master Alat', route: 'admin.equipments.index' },
     { name: 'Master Kategori Alat', route: 'admin.equipment-categories.index' },
+    { name: 'Master Alat', route: 'admin.equipments.index' },
 ];
 
 const settingMenus = [
@@ -24,6 +24,12 @@ const memberMenus = [
     { name: 'Orientasi Anggota', route: 'admin.member-inductions.index' },
     { name: 'Registrasi Anggota', route: 'admin.member-registrations.index' },
 ];
+
+const gymVisitMenus = [
+    { name: 'Visit', route: 'admin.gym-visits.index' },
+];
+
+
 </script>
 
 <template>
@@ -149,6 +155,43 @@ const memberMenus = [
                                         <div class="py-1 bg-white dark:bg-dark-secondary rounded-md shadow-lg ring-1 ring-black ring-opacity-5 transform opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200">
                                             <Link 
                                                 v-for="menu in memberMenus" 
+                                                :key="menu.route"
+                                                :href="route(menu.route)"
+                                                class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-primary-500 hover:text-white dark:hover:bg-dark-accent focus:outline-none transition duration-150 ease-in-out"
+                                                :class="{ 'bg-primary-500 text-white dark:bg-dark-accent': route().current(menu.route) }"
+                                            >
+                                                {{ menu.name }}
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="relative group space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <button 
+                                        class="inline-flex items-center px-1 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none group"
+                                        :class="[
+                                            route().current('admin.gym-visits.*') 
+                                                ? 'text-gray-900 dark:text-white border-b-2 border-dark-accent' 
+                                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                                        ]"
+                                    >
+                                        Gym
+                                        <div class="ml-2 p-1 rounded-full bg-dark-accent bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-200">
+                                            <svg 
+                                                class="h-4 w-4 text-dark-accent transition-transform duration-200 group-hover:rotate-180" 
+                                                xmlns="http://www.w3.org/2000/svg" 
+                                                viewBox="0 0 20 20" 
+                                                fill="currentColor"
+                                            >
+                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </button>
+
+                                    <div class="absolute z-50 hidden group-hover:block mt-14 w-48">
+                                        <div class="py-1 bg-white dark:bg-dark-secondary rounded-md shadow-lg ring-1 ring-black ring-opacity-5 transform opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200">
+                                            <Link 
+                                                v-for="menu in gymVisitMenus" 
                                                 :key="menu.route"
                                                 :href="route(menu.route)"
                                                 class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-primary-500 hover:text-white dark:hover:bg-dark-accent focus:outline-none transition duration-150 ease-in-out"

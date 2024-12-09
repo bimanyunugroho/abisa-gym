@@ -1,6 +1,7 @@
 ### Library PHP
 - [Sluggable](https://github.com/spatie/laravel-sluggable)
 - [Activity Log](https://github.com/spatie/laravel-activitylog)
+- [Debugbar](https://github.com/barryvdh/laravel-debugbar)
 
 ### Library JavaScript
 - [Lodash](https://www.npmjs.com/package/lodash-es)

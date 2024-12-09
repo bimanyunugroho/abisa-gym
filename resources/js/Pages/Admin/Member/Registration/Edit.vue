@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { Head, useForm, usePage, router } from '@inertiajs/vue3';
 import { useToast } from 'vue-toastification';
 import CustomSelect from '@/Components/Inputs/CustomSelect.vue';
@@ -14,8 +14,9 @@ import CustomDatePicker from '@/Components/Inputs/CustomDatePicker.vue';
 import Checkbox from '@/Components/Inputs/Checkbox.vue';
 
 const { props } = usePage();
-const { title, desc, memberRegistration, users, membershipPlans, statuses,  errors: pageErrors } = props;
+const { title, desc, users, membershipPlans, statuses, memberRegistration, errors: pageErrors } = props;
 const toast = useToast();
+
 const form = useForm({
     'user_id': memberRegistration.user_id,
     'membership_plan_id': memberRegistration.membership_plan_id,
@@ -26,6 +27,19 @@ const form = useForm({
     'orientation_date': memberRegistration.orientation_date,
     'orientation_completed': memberRegistration.orientation_completed,
 });
+
+watch(() => form.membership_plan_id, (newPlanId) => {
+    if (newPlanId) {
+        const selectedPlan = membershipPlans.find(plan => plan.id === newPlanId);
+        if (selectedPlan) {
+            form.visits_left = selectedPlan.visit_limit;
+            const startDate = new Date(form.start_date);
+            const endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + selectedPlan.duration_days);
+            form.end_date = endDate.toISOString().split('T')[0];
+        }
+    }
+}, { immediate: true });
 
 // Menyalin semua error dari pageErrors ke form.errors
 Object.keys(pageErrors).forEach(key => {
@@ -42,8 +56,7 @@ function handleSubmit() {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {
-            toast.success('Data registrasi berhasil diubah!');
-            form.reset();
+            toast.success('Data registrasi berhasil diperbarui!');
             isProcessing.value = false;
         },
         onError: (errors) => {
@@ -115,6 +128,7 @@ const breadcrumbItems = [
                                 <CustomDatePicker
                                     v-model="form.start_date"
                                     placeholder="Pilih tanggal mulai"
+                                    :disabled="true"
                                 />
                                 <p v-if="form.errors.start_date" class="mt-2 text-sm text-red-600 dark:text-red-400">
                                     {{ form.errors.start_date }}
@@ -130,6 +144,7 @@ const breadcrumbItems = [
                                 <CustomDatePicker
                                     v-model="form.end_date"
                                     placeholder="Pilih tanggal selesai"
+                                    :disabled="true"
                                 />
                                 <p v-if="form.errors.end_date" class="mt-2 text-sm text-red-600 dark:text-red-400">
                                     {{ form.errors.end_date }}
@@ -146,6 +161,7 @@ const breadcrumbItems = [
                                     id="visits_left"
                                     v-model="form.visits_left"
                                     class="mt-1 block w-full"
+                                    readonly
                                 />
                                 <p v-if="form.errors.visits_left" class="mt-2 text-sm text-red-600 dark:text-red-400">
                                     {{ form.errors.visits_left }}
@@ -210,7 +226,7 @@ const breadcrumbItems = [
                                     :processing="isProcessing" 
                                     :disabled="!form.isDirty" 
                                     @click="handleSubmit"
-                                    label="Perbarui" 
+                                    label="Update" 
                                 />
                                 <ActionLink 
                                     :href="route('admin.member-registrations.index')" 
