@@ -102,6 +102,16 @@ class User extends Authenticatable
         return $this->hasMany(MemberRegistration::class);
     }
 
+    public function gymVisits()
+    {
+        return $this->hasMany(GymVisit::class);
+    }
+
+    public function guestOf()
+    {
+        return $this->hasMany(GymVisit::class, 'guest_of');
+    }
+
     protected static function boot()
     {
         parent::boot();
@@ -123,6 +133,8 @@ class User extends Authenticatable
             RoleEnum::ADMIN->value => 'ADM',
             RoleEnum::TRAINER->value => 'TRN',
             RoleEnum::MEMBER->value => 'MBR',
+            RoleEnum::OWNER->value => 'OWN',
+            RoleEnum::SUPER_ADMIN->value => 'GST',
             default => throw new \InvalidArgumentException('Invalid role for gym number generation')
         };
 
