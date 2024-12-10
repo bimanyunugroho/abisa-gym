@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Member\MemberInductionController;
 use App\Http\Controllers\Admin\Member\MemberLevelController;
 use App\Http\Controllers\Admin\Member\MemberRegistrationController;
 use App\Http\Controllers\Admin\Member\MembershipPlanController;
+use App\Http\Controllers\Admin\Payment\PaymentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('member-registrations', MemberRegistrationController::class);
         Route::resource('members', MemberController::class);
         Route::resource('gym-visits', GymVisitController::class);
+        Route::resource('payments', PaymentController::class);
     });
 
 });

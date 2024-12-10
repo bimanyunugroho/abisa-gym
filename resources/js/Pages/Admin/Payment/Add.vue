@@ -14,39 +14,30 @@ import CustomDatePicker from '@/Components/Inputs/CustomDatePicker.vue';
 import TextArea from '@/Components/Inputs/TextArea.vue';
 
 const { props } = usePage();
-const { title, desc, users, memberRegistrations, visitTypes, guests, errors: pageErrors } = props;
+const { title, desc, users, statuses, paymentTypes, gymVisits, paymentMethods, errors: pageErrors } = props;
 const toast = useToast();
 const form = useForm({
     user_id: '',
-    member_registration_id: '',
-    guest_of: '',
-    check_in_time: new Date().toISOString().split('T')[0],
-    check_out_time: new Date().toISOString().split('T')[0],
-    visit_type: 'ACTIVE',
-    paid_amount: '',
+    payable_id: '',
+    payable_type: '',
+    amount: '',
+    payment_method: '',
+    payment_type: '',
+    status: '',
     notes: '',
 });
 
-watch(() => form.member_registration_id, (newMemberRegistrationId) => {
-    if (newMemberRegistrationId) {
-        const selectedMemberRegistration = memberRegistrations.find(memberRegistration => memberRegistration.id === newMemberRegistrationId);
-        form.user_id = selectedMemberRegistration.user_id;
-
-        const selectedMembershipPlan = selectedMemberRegistration.membership_plan;
-        form.paid_amount = Number(selectedMembershipPlan.price || 0).toFixed(0);
-    }
-}, { immediate: true });
-
-watch(() => form.guest_of, (newGuestId) => {
-    if (newGuestId && form.member_registration_id) {
-        const selectedMemberRegistration = memberRegistrations.find(memberRegistration => memberRegistration.id === form.member_registration_id);
-        const guestFee = selectedMemberRegistration.membership_plan.member_level.guest_fee || 0;
-        const planPrice = Number(selectedMemberRegistration.membership_plan.price || 0);
-        
-        form.paid_amount = (planPrice + Number(guestFee)).toFixed(0);
-    } else if (form.member_registration_id) {
-        const selectedMemberRegistration = memberRegistrations.find(memberRegistration => memberRegistration.id === form.member_registration_id);
-        form.paid_amount = Number(selectedMemberRegistration.membership_plan.price || 0).toFixed(0);
+// Watch untuk gym_visit yang dipilih
+watch(() => form.payable_id, (newValue) => {
+    if (newValue) {
+        // Cari data gym visit yang dipilih
+        const selectedVisit = gymVisits.find(visit => visit.id === newValue);
+        if (selectedVisit) {
+            // Set user_id dan amount dari gym visit yang dipilih
+            form.user_id = selectedVisit.user_id;
+            form.amount = Number(selectedVisit.paid_amount) || 0;
+            form.payable_type = 'App\\Models\\GymVisit';
+        }
     }
 });
 
@@ -61,11 +52,11 @@ const isProcessing = ref(false);
 
 function handleSubmit() {
     isProcessing.value = true;
-    router.post(route('admin.gym-visits.store'), form, {
+    router.post(route('admin.payments.store'), form, {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {
-            toast.success('Data Kunjungan Gym berhasil disimpan!');
+            toast.success('Data Pembayaran berhasil disimpan!');
             form.reset();
             isProcessing.value = false;
         },
@@ -78,7 +69,7 @@ function handleSubmit() {
 
 const breadcrumbItems = [
   { label: 'Home', href: '/' },
-  { label: 'Kunjungan Gym', href: route('admin.gym-visits.index') },
+  { label: 'Pembayaran', href: route('admin.payments.index') },
   { label: 'Tambah', href: '#' },
 ];
 </script>
@@ -95,22 +86,22 @@ const breadcrumbItems = [
                         <form @submit.prevent="handleSubmit">
                             <div class="mb-4">
                                 <LabelRequired 
-                                    text="Member Registration" 
-                                    html-for="member_registration_id"
+                                    text="Data Kunjungan" 
+                                    html-for="payable_id"
                                     :required="true" 
                                 />
                                 <CustomSelect
-                                    v-model="form.member_registration_id"
-                                    :options="memberRegistrations"
+                                    v-model="form.payable_id"
+                                    :options="gymVisits"
                                     :reduce="option => option.id"
-                                    :get-option-label="option => `${option.user.name} - ${option.membership_plan.name}`"
-                                    placeholder="Pilih member registration"
+                                    :get-option-label="option => `${option.user?.name} - ${option.check_in_time}`"
+                                    placeholder="Pilih data kunjungan"
                                 />
-                                <p v-if="form.errors.member_registration_id" class="mt-2 text-sm text-red-600 dark:text-red-400">
-                                    {{ form.errors.member_registration_id }}
+                                <p v-if="form.errors.payable_id" class="mt-2 text-sm text-red-600 dark:text-red-400">
+                                    {{ form.errors.payable_id }}
                                 </p>
                             </div>
-
+                            
                             <div class="mb-4">
                                 <LabelRequired 
                                     text="Anggota" 
@@ -121,93 +112,79 @@ const breadcrumbItems = [
                                     v-model="form.user_id"
                                     :options="users"
                                     :reduce="option => option.id"
-                                    label="name"
-                                    placeholder="Pilih anggota"
+                                    :get-option-label="option => option.name"
+                                    placeholder="Pilih member"
+                                    readonly
                                 />
-                                <p v-if="form.errors.user_id" class="mt-2 text-sm text-red-600 dark:text-red-400">
-                                    {{ form.errors.user_id }}
-                                </p>
                             </div>
 
                             <div class="mb-4">
                                 <LabelRequired 
-                                    text="Apakah Membawa Tamu ?" 
-                                    html-for="guest_of"
-                                    :required="false" 
-                                />
-                                <CustomSelect
-                                    v-model="form.guest_of"
-                                    :options="guests"
-                                    :reduce="option => option.id"
-                                    label="name"
-                                    placeholder="Pilih guest"
-                                />
-                                <p v-if="form.errors.guest_of" class="mt-2 text-sm text-red-600 dark:text-red-400">
-                                    {{ form.errors.guest_of }}
-                                </p>
-                            </div>
-
-                            <div class="mb-4">
-                                <LabelRequired 
-                                    text="Jenis Kunjungan" 
-                                    html-for="visit_type"
+                                    text="Jenis Pembayaran" 
+                                    html-for="payment_type"
                                     :required="true" 
                                 />
                                 <CustomSelect
-                                    v-model="form.visit_type"
-                                    :options="visitTypes"
+                                    v-model="form.payment_type"
+                                    :options="paymentTypes"
                                     :reduce="option => option.value"
                                     label="label"
-                                    placeholder="Pilih jenis kunjungan"
+                                    placeholder="Pilih jenis pembayaran"
                                 />
-                                <p v-if="form.errors.visit_type" class="mt-2 text-sm text-red-600 dark:text-red-400">
-                                    {{ form.errors.visit_type }}
+                                <p v-if="form.errors.payment_type" class="mt-2 text-sm text-red-600 dark:text-red-400">
+                                    {{ form.errors.payment_type }}
                                 </p>
                             </div>
 
                             <div class="mb-4">
                                 <LabelRequired 
-                                    text="Tanggal Masuk" 
-                                    html-for="check_in_time"
+                                    text="Metode Pembayaran" 
+                                    html-for="payment_method"
                                     :required="true" 
                                 />
-                                <CustomDatePicker
-                                    v-model="form.check_in_time"
-                                    placeholder="Pilih tanggal masuk"
+                                <CustomSelect
+                                    v-model="form.payment_method"
+                                    :options="paymentMethods"
+                                    :reduce="option => option.value"
+                                    label="label"
+                                    placeholder="Pilih metode pembayaran"
                                 />
-                                <p v-if="form.errors.check_in_time" class="mt-2 text-sm text-red-600 dark:text-red-400">
-                                    {{ form.errors.check_in_time }}
+                                <p v-if="form.errors.payment_method" class="mt-2 text-sm text-red-600 dark:text-red-400">
+                                    {{ form.errors.payment_method }}
                                 </p>
                             </div>
 
                             <div class="mb-4">
                                 <LabelRequired 
-                                    text="Tanggal Selesai" 
-                                    html-for="check_out_time"
+                                    text="Status" 
+                                    html-for="status"
                                     :required="true" 
                                 />
-                                <CustomDatePicker
-                                    v-model="form.check_out_time"
-                                    placeholder="Pilih tanggal selesai"
+                                <CustomSelect
+                                    v-model="form.status"
+                                    :options="statuses"
+                                    :reduce="option => option.value"
+                                    label="label"
+                                    placeholder="Pilih status"
                                 />
-                                <p v-if="form.errors.check_out_time" class="mt-2 text-sm text-red-600 dark:text-red-400">
-                                    {{ form.errors.check_out_time }}
+                                <p v-if="form.errors.status" class="mt-2 text-sm text-red-600 dark:text-red-400">
+                                    {{ form.errors.status }}
                                 </p>
                             </div>
                             
                             <div class="mb-4">
                                 <LabelRequired 
-                                    text="Jumlah Bayar" 
-                                    html-for="paid_amount"
+                                    text="Jumlah Pembayaran" 
+                                    html-for="amount"
                                     :required="true"
                                 />
                                 <TextNumeric 
-                                    id="paid_amount"
-                                    v-model="form.paid_amount"
+                                    id="amount"
+                                    v-model="form.amount"
                                     class="mt-1 block w-full"
                                 />
-                                <p v-if="form.errors.paid_amount" class="mt-2 text-sm text-red-600 dark:text-red-400">
-                                    {{ form.errors.paid_amount }}
+                                <p v-if="form.errors.amount" class="mt-2 text-sm text-red-600 dark:text-red-400">
+                                    {{ form.errors.amount }}
                                 </p>
                             </div>
 
@@ -215,7 +192,7 @@ const breadcrumbItems = [
                                 <LabelRequired 
                                     text="Catatan" 
                                     html-for="notes"
-                                    :required="true" 
+                                    :required="false" 
                                 />
                                 <TextArea 
                                     id="notes" 
@@ -236,7 +213,7 @@ const breadcrumbItems = [
                                     label="Simpan" 
                                 />
                                 <ActionLink 
-                                    :href="route('admin.gym-visits.index')" 
+                                    :href="route('admin.payments.index')" 
                                     label="Batal" 
                                     color="secondary" 
                                 />

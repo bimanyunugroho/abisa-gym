@@ -74,4 +74,9 @@ class GymVisit extends Model
     {
         return $this->belongsTo(User::class, 'guest_of');
     }
+
+    public function payment()
+    {
+        return $this->morphMany(Payment::class, 'payable');
+    }
 }
