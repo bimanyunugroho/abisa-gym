@@ -112,6 +112,11 @@ class User extends Authenticatable
         return $this->hasMany(GymVisit::class, 'guest_of');
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     protected static function boot()
     {
         parent::boot();
