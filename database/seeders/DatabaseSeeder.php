@@ -2,6 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Equipment;
+use App\Models\EquipmentCategory;
+use App\Models\MemberInduction;
+use App\Models\MemberLevel;
+use App\Models\MemberRegistration;
+use App\Models\MembershipPlan;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -13,11 +19,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // EquipmentCategory::factory(5)->create();
+        // Equipment::factory(50)->create();
+        User::factory(100)->create();
+        // MemberInduction::factory(10)->create();
+        // MemberLevel::factory(10)->create();
+        // MembershipPlan::factory(10)->create();
+        // MemberRegistration::factory(10)->create();
     }
 }
